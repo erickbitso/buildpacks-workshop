@@ -12,3 +12,8 @@ WithLinuxBuild = false
     [[order.group]]
     id = "not-much"
     version = "0.0.1"
+    optional = true
+
+    [[order.group]]
+    id = "curl"
+    version = "0.0.1"

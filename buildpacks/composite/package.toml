@@ -3,3 +3,6 @@ uri = "."
 
 [[dependencies]]
   uri = "localhost:5000/not-much:latest"
+
+[[dependencies]]
+  uri = "localhost:5000/curl:latest"
