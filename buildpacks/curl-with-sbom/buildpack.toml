@@ -1,0 +1,15 @@
+api = "0.10"
+WithWindowsBuild = false
+WithLinuxBuild = false
+
+[buildpack]
+  id = "curl"
+  version = "0.0.1"
+  sbom-formats = [ "application/vnd.cyclonedx+json" ]
+
+[[stacks]]
+  id = "*"
+
+[[targets]]
+  os = "linux"
+  arch = "amd64"

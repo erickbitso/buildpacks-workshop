@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+echo "---> curl buildpack"
+
+
+curl_layer="${CNB_LAYERS_DIR}"/curl
+mkdir -p "${curl_layer}/bin"
+
+
+# Download deb using curl
+curl_version="7.81.0"
+curl_url="http://security.ubuntu.com/ubuntu/pool/main/c/curl/curl_${curl_version}-1ubuntu1.16_amd64.deb"
+cached_curl_version=$(grep 'curl_version' "${CNB_LAYERS_DIR}/curl.toml" | sed 's/.*= "\(.*\)"/\1/' 2>/dev/null || echo 'NOT FOUND')
+
+if [[ "${curl_url}" != *"${cached_curl_version}"* ]] ; then
+    echo "-----> Downloading and extracting curl"
+    curl -L -o "package.deb" http://security.ubuntu.com/ubuntu/pool/main/c/curl/curl_${curl_version}-1ubuntu1.16_amd64.deb
+    mkdir unpack
+    dpkg -x package.deb unpack
+    cp unpack/usr/bin/curl "${curl_layer}/bin/curl"
+    # Cleanup the workspace
+    rm -rf unpack
+    rm package.deb
+else
+    echo "-----> Reusing curl:${cached_curl_version}"
+fi
+
+
+cat << EOF > "${CNB_LAYERS_DIR}/curl.toml"
+[types]
+launch = true
+build = true
+cache = true
+[metadata]
+curl_version = "${curl_version}"
+EOF
+
+echo "Creating an entrypoint"
+# A launch.toml
+cat > "${CNB_LAYERS_DIR}/launch.toml" << EOL
+[[processes]]
+type = "web"
+command = ["bash", "-c", "env && curl --version"]
+default = true
+EOL
+
+# Append a Bill-of-Materials containing metadata about the provided curl version
+cat >> "${CNB_LAYERS_DIR}/curl.sbom.cdx.json" << EOL
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.4",
+  "version": 1,
+  "components": [
+    {
+      "type": "application",
+      "name": "curl",
+      "version": "${curl_version}"
+    }
+  ]
+}
+EOL
