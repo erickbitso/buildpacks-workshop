@@ -1,0 +1,5 @@
+[buildpack]
+uri = "."
+
+[[dependencies]]
+  uri = "localhost:5000/not-much:latest"

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+
+if [ "$BP_NOT_MUCH" != "true" ]; then
+    exit 100
+fi
+
+exit 0
