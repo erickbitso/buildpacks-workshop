@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+if [[ -z "${BP_WGET}" ]]; then
+  exit 100
+fi
+
+
+exit 0

@@ -1,0 +1,10 @@
+# Buildpack API version
+api = "0.10"
+
+# Extension ID and metadata
+[extension]
+id = "wget-extension"
+version = "0.0.1"
+name = "wget Extension"
+homepage = "https://github.com/erickbitso/buildpacks-workshop/tree/main/extensions/wget-extension"
+description = "A simple extension that installs wget"

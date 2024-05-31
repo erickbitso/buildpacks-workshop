@@ -11,7 +11,7 @@
   [[order.group]]
     id = "composite"
     version = "0.0.1"
-
+  
 
 # Base images used to create the builder
 [build]
