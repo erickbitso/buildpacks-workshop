@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+echo "---> curl buildpack"
+
+
+curl_layer="${CNB_LAYERS_DIR}"/curl
+mkdir -p "${curl_layer}/bin"
+
+
+# Download deb using curl
+curl -L -o "package.deb" http://security.ubuntu.com/ubuntu/pool/main/c/curl/curl_7.81.0-1ubuntu1.16_amd64.deb
+
+mkdir unpack
+dpkg -x package.deb unpack
+cp unpack/usr/bin/curl "${curl_layer}/bin/curl"
+# Cleanup the workspace
+rm -rf unpack
+rm package.deb
+
+cat << EOF > "${CNB_LAYERS_DIR}/curl.toml"
+[types]
+launch = true
+build = true
+EOF
+
+echo "Creating an entrypoint"
+# A launch.toml
+cat > "${CNB_LAYERS_DIR}/launch.toml" << EOL
+[[processes]]
+type = "web"
+command = ["bash", "-c", "env && curl --version"]
+default = true
+EOL
