@@ -6,7 +6,7 @@ echo "---> curl buildpack"
 
 curl_layer="${CNB_LAYERS_DIR}"/curl
 mkdir -p "${curl_layer}/bin"
-
+mkdir -p "${curl_layer}/env"
 
 # Download deb using curl
 curl_version="7.81.0"
@@ -25,6 +25,11 @@ if [[ "${curl_url}" != *"${cached_curl_version}"* ]] ; then
 else
     echo "-----> Reusing curl:${cached_curl_version}"
 fi
+
+
+# Example of setting an environment variable.
+# Given this is a launch layer, it makes it to the entrypoint of the app
+echo "my_value" > "${curl_layer}/env/MY_ENV_VAR"
 
 
 cat << EOF > "${CNB_LAYERS_DIR}/curl.toml"
