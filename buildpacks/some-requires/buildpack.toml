@@ -1,0 +1,14 @@
+api = "0.10"
+WithWindowsBuild = false
+WithLinuxBuild = false
+
+[buildpack]
+  id = "some-requires"
+  version = "0.0.1"
+
+[[stacks]]
+  id = "*"
+
+[[targets]]
+  os = "linux"
+  arch = "amd64"
